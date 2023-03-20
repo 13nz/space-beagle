@@ -30,6 +30,16 @@ public class Generator : MonoBehaviour
     [SerializeField] Tilemap caveTilemap;
 
     [SerializeField] float seed;
+    public enum Directions {
+        R,
+        L,
+        LR,
+        LRT,
+        LRB,
+        LRTB
+    }
+
+    public Directions direction;
 
     int [,] map;
     // Start is called before the first frame update
@@ -37,6 +47,12 @@ public class Generator : MonoBehaviour
     {
         perlinHeightList = new int[width];
         Generate();
+    }
+
+    public Generator Init(Directions dir)
+    {
+        direction = dir;
+        return this;
     }
 
     // Update is called once per frame
@@ -50,11 +66,12 @@ public class Generator : MonoBehaviour
 
     void Generate()
     {
-        seed = Time.time; 
+        seed = Random.Range(-10000, 10000); 
         ClearMap();
         map = GenerateArray(width, height, true);
         map = TerrainGeneration(map);
         SmoothMap(smoothAmount);
+        FixDirection();
         RenderMap(map, groundTilemap, caveTilemap, groundTile, caveTile);
     }
 
@@ -84,14 +101,18 @@ public class Generator : MonoBehaviour
             perlinHeight += height / 2;
             perlinHeightList[x] = perlinHeight;
 
-            for (int y = 0; y < perlinHeight; y++)
+            for (int y = 0; y < height; y++)
             {
                 // Perlin generation
                 //int caveVal = Mathf.RoundToInt(Mathf.PerlinNoise((x * mod) + seed, (y * mod) + seed));
                 //map[x, y] = (caveVal == 1) ? 2 : 1;
 
                 // Cellular automata
-                map[x, y] = (pseudoRandom.Next(1, 100) < randomFillPercent) ? 1 : 2;
+                map[x, y] = (pseudoRandom.Next(1, 140) < randomFillPercent) ? 1 : 2;
+                if (y < height / 2 + 2 && y > height / 2 - 2)
+                {
+                    map[x, y] = 2;
+                }
 
             }
         }
@@ -130,9 +151,9 @@ public class Generator : MonoBehaviour
         {
             for (int x = 0; x < width; x++)
             {
-                for (int y = 0; y < perlinHeightList[x]; y++) // loop through perlin heights
+                for (int y = 0; y < height; y++) // loop through perlin heights
                 {
-                    if (x == 0 || y == 0 || x == width - 1 || y == perlinHeightList[x] - 1)
+                    if (x == 0 || y == 0 || x == width - 1 || y == height - 1)
                     {
                         map[x, y] = 1;
                     }
@@ -151,6 +172,55 @@ public class Generator : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void FixDirection()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (direction == Directions.R)
+                {
+                    if (x > width - 3 && y < height / 2 + 2 && y > height / 2 - 2)
+                    map[x, y] = 2;
+                }
+                else if (direction == Directions.L)
+                {
+                    if (x < 3 && y < height / 2 + 2 && y > height / 2 - 2)
+                    map[x, y] = 2;
+                }
+                else if (direction == Directions.LR)
+                {
+                    if ((x < 3 || x > width - 3) && y < height / 2 + 2 && y > height / 2 - 2)
+                    map[x, y] = 2;
+                }
+                else if (direction == Directions.LRT)
+                {
+                    if ((y < 3 && x < width / 2 + 2 && x > width / 2 - 2) || ( y < height / 2 + 2 && y > height / 2 - 2))
+                    {
+                        map[x, y] = 2;
+                    }
+                }
+                else if (direction == Directions.LRB)
+                {
+                    if ((y > height - 3 && x < width / 2 + 2 && x > width / 2 - 2) ||  (y < height / 2 + 2 && y > height / 2 - 2))
+                    {
+                        map[x, y] = 2;
+                    }
+                }
+                else if (direction == Directions.LRTB)
+                {
+                    if ((((y < 3 || y > height - 3) && x < width / 2 + 2 && x > width / 2 - 2)) ||  (y < height / 2 + 2 && y > height / 2 - 2))
+                    {
+                        map[x, y] = 2;
+                    }
+                }
+
+
+            }
+        }
+        
     }
 
     public int GetSurroundingCount(int gridX, int gridY)
