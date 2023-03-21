@@ -10,9 +10,12 @@ public class MapGeneration : MonoBehaviour
     [SerializeField] int height;
     [SerializeField] int scaleX;
     [SerializeField] int scaleY;
-    //int diag;
+    [SerializeField] TileBase borderTile;
+    [SerializeField] Tilemap tilemap;
+
     //[SerializeField] int scale;
     [SerializeField] GameObject room;
+    Stack<Generator.Directions> directions;
 
     int direction; // 0 & 1 == Right, 2 & 3 == Left, 4 == down
     bool finished = false;
@@ -22,11 +25,38 @@ public class MapGeneration : MonoBehaviour
 
     void Start()
     {
-        //diag = (int)Mathf.Sqrt(scaleX * scaleX + scaleY + scaleY);
+        int borderWidth = width * scaleX + 1;
+        int borderHeight = height * scaleY + 1;
+
+        tilemap.ClearAllTiles();
+        for (int x = 0; x < borderWidth; x++)
+        {
+            for (int y = 0; y < borderHeight; y++)
+            {
+                if (x == 0 || x == borderWidth - 1 || y == borderHeight - 1 || y == 0)
+                {
+                    tilemap.SetTile(new Vector3Int(x, y, 0), borderTile);
+                }
+            }
+        }
+
+        //directions = new Stack<Generation.Directions>();
         roomArray = new GameObject[width, height];
         transform.position = new Vector2(Random.Range(0, width), 0);
-        CreateRoom(Generator.Directions.LR);
-        //CreateRoom(startingRooms[0]);
+        if (transform.position.x > scaleX)
+        {
+            if (transform.position.x > width - scaleX)
+            {
+                CreateRoom(Generator.Directions.L);
+            }
+            CreateRoom(Generator.Directions.LR);
+        }
+        else
+        {
+            CreateRoom(Generator.Directions.R);
+        }
+        
+        //CreateRoom(Generator.Directions.LR);
 
         if (transform.position.x == 0)
         {
@@ -93,15 +123,15 @@ public class MapGeneration : MonoBehaviour
                 if (transform.position.y > -height + 1)
                 {
                     Destroy(GetRoom(transform.position));
-                    
-                    CreateRoom(Generator.Directions.LRT);
+                    Generator.Directions dir = (Random.Range(0, 2) == 0) ? Generator.Directions.LRB : Generator.Directions.LRTB;
+                    CreateRoom(Generator.Directions.LRTB);
                     transform.position += Vector3.down;
                     int rand = Random.Range(0, 4);
                     if (rand == 0)
                     {
                         if (transform.position.y > -height + 1)
                         {
-                            CreateRoom(Generator.Directions.LRB);
+                            CreateRoom(Generator.Directions.LRTB);
                             transform.position += Vector3.down;
                         }
                         else
@@ -111,7 +141,8 @@ public class MapGeneration : MonoBehaviour
                         }
                     }
 
-                    CreateRoom(Generator.Directions.LRB);
+                    Generator.Directions dir2 = (Random.Range(2, 4) == 3) ? Generator.Directions.LRT : Generator.Directions.LRTB;
+                    CreateRoom(Generator.Directions.LRTB);
                     if (transform.position.x == 0)
                         direction = 0;
                     else if (transform.position.x == width - 1)
@@ -136,8 +167,13 @@ public class MapGeneration : MonoBehaviour
         return roomArray[(int)pos.x, -(int)pos.y];
     }
 
+
     void CreateRoom(Generator.Directions dir)
     {
+        // 0, 1 > Right
+        // 2, 3 > Left
+        // 4 > Down
+        //Generator.Directions dir;
         GameObject newRoom = Instantiate(room, new Vector3(transform.position.x * scaleX, transform.position.y * scaleY, 0), Quaternion.identity) as GameObject;
         var initRoom = newRoom.GetComponent<Generator>();
         initRoom.Init(dir);
@@ -146,6 +182,7 @@ public class MapGeneration : MonoBehaviour
 
         roomArray[x, y] = newRoom;
         loadedRooms.Add(new Vector2(x, y));
+        //directions.Push(dir);
     }
 
     void FillMap()

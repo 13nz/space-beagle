@@ -182,45 +182,49 @@ public class Generator : MonoBehaviour
             {
                 if (direction == Directions.R)
                 {
-                    if (x > width - 3 && y < height / 2 + 2 && y > height / 2 - 2)
-                    map[x, y] = 2;
+                    if (x > width / 2 && y < height / 2 + 2 && y > height / 2 - 2)
+                    {
+                        map[x, y] = 2;
+                    }
                 }
                 else if (direction == Directions.L)
                 {
-                    if (x < 3 && y < height / 2 + 2 && y > height / 2 - 2)
-                    map[x, y] = 2;
+                    if (x < width / 2 && y < height / 2 + 2 && y > height / 2 - 2)
+                    {
+                        map[x, y] = 2;
+                    }
                 }
                 else if (direction == Directions.LR)
                 {
-                    if ((x < 3 || x > width - 3) && y < height / 2 + 2 && y > height / 2 - 2)
-                    map[x, y] = 2;
+                    if ((x < width / 2 - 2 || x > width / 2 + 2) && y < height / 2 + 2 && y > height / 2 - 2)
+                    {
+                        map[x, y] = 2;
+                    }
                 }
                 else if (direction == Directions.LRT)
                 {
-                    if ((y < 3 && x < width / 2 + 2 && x > width / 2 - 2) || ( y < height / 2 + 2 && y > height / 2 - 2))
+                    if ((y < height / 2 && x < width / 2 + 2 && x > width / 2 - 2) || ( y < height / 2 + 2 && y > height / 2 - 2))
                     {
                         map[x, y] = 2;
                     }
                 }
                 else if (direction == Directions.LRB)
                 {
-                    if ((y > height - 3 && x < width / 2 + 2 && x > width / 2 - 2) ||  (y < height / 2 + 2 && y > height / 2 - 2))
+                    if ((y > height / 2 && x < width / 2 + 2 && x > width / 2 - 2) ||  (y < height / 2 + 2 && y > height / 2 - 2))
                     {
                         map[x, y] = 2;
                     }
                 }
                 else if (direction == Directions.LRTB)
                 {
-                    if ((((y < 3 || y > height - 3) && x < width / 2 + 2 && x > width / 2 - 2)) ||  (y < height / 2 + 2 && y > height / 2 - 2))
+                    if ((((y < height / 2 - 2 || y > height / 2 + 2) && x < width / 2 + 2 && x > width / 2 - 2)) ||  (y < height / 2 + 2 && y > height / 2 - 2))
                     {
                         map[x, y] = 2;
                     }
                 }
 
-
             }
         }
-        
     }
 
     public int GetSurroundingCount(int gridX, int gridY)
