@@ -188,7 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 319204804}
   - component: {fileID: 319204803}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: MapGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -207,12 +207,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7021410313af64126bfa8206a5daef78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 6
-  height: 6
-  scaleX: 30
-  scaleY: 20
+  width: 4
+  height: 4
+  scaleX: 15
+  scaleY: 12
   borderTile: {fileID: 11400000, guid: ff3ee92680e294b1db026f6df8d992e2, type: 2}
   tilemap: {fileID: 1669685432}
+  mainGrid: {fileID: 1384039989}
+  spawn: {fileID: 5481666999407375155, guid: ad0bc38032b924f419dcf42c802b2d38, type: 3}
   room: {fileID: 2069887862005987951, guid: 0a3333c25439941638d7e111db53b876, type: 3}
   loadedRooms: []
 --- !u!4 &319204804
@@ -227,8 +229,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 1669685430}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
@@ -247,7 +249,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &519420029
 AudioListener:
   m_ObjectHideFlags: 0
@@ -534,13 +536,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1384039988}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: -108, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1669685430}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1669685429
 GameObject:
@@ -554,7 +556,7 @@ GameObject:
   - component: {fileID: 1669685432}
   - component: {fileID: 1669685431}
   - component: {fileID: 1669685433}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -572,7 +574,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 319204804}
   m_Father: {fileID: 1384039990}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
