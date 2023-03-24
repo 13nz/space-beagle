@@ -111,7 +111,7 @@ public class Generator : MonoBehaviour
                 map[x, y] = (pseudoRandom.Next(1, 140) < randomFillPercent) ? 1 : 2;
                 if (y < height / 2 + 2 && y > height / 2 - 2)
                 {
-                    map[x, y] = 2;
+                    map[x, y] = 0;
                 }
 
             }
@@ -130,10 +130,10 @@ public class Generator : MonoBehaviour
                 {
                     groundTilemap.SetTile(new Vector3Int(x, y, 0), groundTile );
                 }
-                else if (map[x, y] == 2)
+                /* else if (map[x, y] == 2)
                 {
                     caveTilemap.SetTile(new Vector3Int(x, y, 0), caveTile); 
-                }
+                } */
             }
         }
     }
@@ -166,7 +166,7 @@ public class Generator : MonoBehaviour
                         } 
                         else if (surrounding < 4)
                         {
-                            map[x, y] = 2;
+                            map[x, y] = 0;
                         }
                     }
                 }
@@ -184,42 +184,43 @@ public class Generator : MonoBehaviour
                 {
                     if (x > width / 2 && y < height / 2 + 2 && y > height / 2 - 2)
                     {
-                        map[x, y] = 2;
+                        map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.L)
                 {
                     if (x < width / 2 && y < height / 2 + 2 && y > height / 2 - 2)
                     {
-                        map[x, y] = 2;
+                        map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.LR)
                 {
                     if ((x < width / 2 - 2 || x > width / 2 + 2) && y < height / 2 + 2 && y > height / 2 - 2)
                     {
-                        map[x, y] = 2;
+                        map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.LRT)
                 {
-                    if ((y < height / 2 && x < width / 2 + 2 && x > width / 2 - 2) || ( y < height / 2 + 2 && y > height / 2 - 2))
+                    if ((y > height / 2 && x < width / 2 + 2 && x > width / 2 - 2) || ( y < height / 2 + 2 && y > height / 2 - 2))
                     {
-                        map[x, y] = 2;
+                        map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.LRB)
                 {
                     if ((y > height / 2 && x < width / 2 + 2 && x > width / 2 - 2) ||  (y < height / 2 + 2 && y > height / 2 - 2))
                     {
-                        map[x, y] = 2;
+                        map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.LRTB)
                 {
-                    if ((((y < height / 2 - 2 || y > height / 2 + 2) && x < width / 2 + 2 && x > width / 2 - 2)) ||  (y < height / 2 + 2 && y > height / 2 - 2))
+                    //if ((((y < height / 2 - 2 || y > height / 2 + 2) && x < width / 2 + 2 && x > width / 2 - 2)) ||  (y < height / 2 + 2 && y > height / 2 - 2))
+                    if (((y > height / 2 - 2 && y < height / 2 + 2 && (x < 4 || x > width - 4)) || ((y < 4 || y > height - 4) && x < width / 2 + 2 && x > width / 2 - 2)) )
                     {
-                        map[x, y] = 2;
+                        map[x, y] = 0;
                     }
                 }
 

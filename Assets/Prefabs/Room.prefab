@@ -94,7 +94,7 @@ MonoBehaviour:
   width: 15
   height: 12
   smooth: 60
-  randomFillPercent: 55
+  randomFillPercent: 66
   smoothAmount: 1
   groundTile: {fileID: 11400000, guid: ff3ee92680e294b1db026f6df8d992e2, type: 2}
   groundTilemap: {fileID: 2069887862129823517}

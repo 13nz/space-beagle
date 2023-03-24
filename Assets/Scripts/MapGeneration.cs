@@ -40,9 +40,9 @@ public class MapGeneration : MonoBehaviour
         transform.position = new Vector2(0, 0);
         transform.position = new Vector2(Random.Range(0, width), 0);
 
-        if (transform.position.x > scaleX)
+        /* if (transform.position.x > scaleX)
         {
-            if (transform.position.x > width - scaleX)
+            if (transform.position.x >= width - scaleX)
             {
                 CreateRoom(Generator.Directions.L);
                 
@@ -52,9 +52,9 @@ public class MapGeneration : MonoBehaviour
         else
         {
             CreateRoom(Generator.Directions.R);
-        }
+        } */
         
-        //CreateRoom(Generator.Directions.LR);
+        CreateRoom(Generator.Directions.LR);
 
         if (transform.position.x == 0)
         {
@@ -122,7 +122,7 @@ public class MapGeneration : MonoBehaviour
                 if (transform.position.y > -height + 1)
                 {
                     Destroy(GetRoom(transform.position));
-                    Generator.Directions dir = (Random.Range(0, 2) == 0) ? Generator.Directions.LRB : Generator.Directions.LRTB;
+                    //Generator.Directions dir = (Random.Range(0, 2) == 0) ? Generator.Directions.LRB : Generator.Directions.LRTB;
                     CreateRoom(Generator.Directions.LRTB);
                     transform.position += Vector3.down;
                     int rand = Random.Range(0, 4);
@@ -243,6 +243,8 @@ public class MapGeneration : MonoBehaviour
 
         int endX = gridX + borderWidth ;
         int endY = gridY - borderHeight ;
+
+        // FIX SCALING
 
         tilemap.ClearAllTiles();
         /* for (int x = 0; x < borderWidth; x++)
