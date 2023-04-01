@@ -24,10 +24,16 @@ public class Generator : MonoBehaviour
     [SerializeField] int smoothAmount;
 
     [Header("Tiles")]
+    //[SerializeField] TileBase[] tiles;
     [SerializeField] TileBase groundTile;
     [SerializeField] Tilemap groundTilemap;
     [SerializeField] TileBase caveTile;
     [SerializeField] Tilemap caveTilemap;
+    [SerializeField] Tilemap decorationsTilemap;
+    [SerializeField] TileBase decoTile;
+    
+
+    private Dictionary<int[,], GameObject> tileDict;
 
     [SerializeField] float seed;
     public enum Directions {
@@ -39,19 +45,35 @@ public class Generator : MonoBehaviour
         LRTB
     }
 
+    [SerializeField] GameObject enemy;
+    [SerializeField] GameObject door;
+    [SerializeField] GameObject[] collectables;
+    [SerializeField] GameObject heart;
+
+    private int enemyCount = 0;
+    private int collectablesCount = 0;
+
     public Directions direction;
 
-    int [,] map;
+    public int [,] map;
     // Start is called before the first frame update
     void Start()
     {
+        MapGeneration mapgen = transform.parent.parent.GetChild(1).GetComponent<MapGeneration>();
+        groundTile = mapgen.GetTile();
+        //tileDict = new Dictionary<int[,], Vector2>;
         perlinHeightList = new int[width];
         Generate();
     }
 
-    public Generator Init(Directions dir)
+    public Generator Init(Directions dir, bool isExit)
     {
         direction = dir;
+        if (isExit && door != null)
+        {
+            StartCoroutine(AddDoor());
+        }
+        
         return this;
     }
 
@@ -72,7 +94,15 @@ public class Generator : MonoBehaviour
         map = TerrainGeneration(map);
         SmoothMap(smoothAmount);
         FixDirection();
+        AddEnemies();
+        AddCollectables();
+        if (Random.Range(0, 5) == 1)
+        {
+            AddHeart();
+        }
+        
         RenderMap(map, groundTilemap, caveTilemap, groundTile, caveTile);
+        
     }
 
     public int[,] GenerateArray(int width, int height, bool empty)
@@ -130,6 +160,14 @@ public class Generator : MonoBehaviour
                 {
                     groundTilemap.SetTile(new Vector3Int(x, y, 0), groundTile );
                 }
+                // Add decorations
+                if (y > 0)
+                {
+                    if (map[x, y] == 0 && map[x, y - 1] == 1 && (Random.Range(0, 10) == 1))
+                    {
+                        decorationsTilemap.SetTile(new Vector3Int(x, y, 0), decoTile);
+                    }
+                }
                 /* else if (map[x, y] == 2)
                 {
                     caveTilemap.SetTile(new Vector3Int(x, y, 0), caveTile); 
@@ -182,35 +220,35 @@ public class Generator : MonoBehaviour
             {
                 if (direction == Directions.R)
                 {
-                    if (x > width / 2 && y < height / 2 + 2 && y > height / 2 - 2)
+                    if (x >= width / 2 && y <= height / 2 + 2 && y >= height / 2 - 2)
                     {
                         map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.L)
                 {
-                    if (x < width / 2 && y < height / 2 + 2 && y > height / 2 - 2)
+                    if (x <= width / 2 && y <= height / 2 + 2 && y >= height / 2 - 2)
                     {
                         map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.LR)
                 {
-                    if ((x < width / 2 - 2 || x > width / 2 + 2) && y < height / 2 + 2 && y > height / 2 - 2)
+                    if ((x <= width / 2 - 2 || x >= width / 2 + 2) && y <= height / 2 + 2 && y >= height / 2 - 2)
                     {
                         map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.LRT)
                 {
-                    if ((y > height / 2 && x < width / 2 + 2 && x > width / 2 - 2) || ( y < height / 2 + 2 && y > height / 2 - 2))
+                    if ((y >= height / 2 && x <= width / 2 + 2 && x >= width / 2 - 2) || ( y <= height / 2 + 2 && y >= height / 2 - 2))
                     {
                         map[x, y] = 0;
                     }
                 }
                 else if (direction == Directions.LRB)
                 {
-                    if ((y > height / 2 && x < width / 2 + 2 && x > width / 2 - 2) ||  (y < height / 2 + 2 && y > height / 2 - 2))
+                    if ((y >= height / 2 && x <= width / 2 + 2 && x >= width / 2 - 2) ||  (y <= height / 2 + 2 && y >= height / 2 - 2))
                     {
                         map[x, y] = 0;
                     }
@@ -218,7 +256,7 @@ public class Generator : MonoBehaviour
                 else if (direction == Directions.LRTB)
                 {
                     //if ((((y < height / 2 - 2 || y > height / 2 + 2) && x < width / 2 + 2 && x > width / 2 - 2)) ||  (y < height / 2 + 2 && y > height / 2 - 2))
-                    if (((y > height / 2 - 2 && y < height / 2 + 2 && (x < 4 || x > width - 4)) || ((y < 4 || y > height - 4) && x < width / 2 + 2 && x > width / 2 - 2)) )
+                    if (((y >= height / 2 - 2 && y <= height / 2 + 2 && (x <= width / 2 || x >= width - width / 2)) || ((y <= height / 2 || y >= height - height / 2) && x <= width / 2 + 2 && x >= width / 2 - 2)) )
                     {
                         map[x, y] = 0;
                     }
@@ -252,5 +290,86 @@ public class Generator : MonoBehaviour
             }
         }
         return count;
+    }
+
+    public IEnumerator AddDoor()
+    {
+        yield return new WaitUntil(() => door != null);
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (y > 0)
+                {
+                    if (map[x, y] == 0 && map[x, y - 1] == 1)
+                    {
+                        GameObject exitDoor = Instantiate(door, new Vector3Int(x, y, 0), Quaternion.identity);
+                        exitDoor.transform.parent = transform;
+                        exitDoor.transform.localPosition = new Vector2(x, y);
+                        yield break;
+                    }
+                }
+                
+            }
+        }
+    }
+
+    public void AddEnemies()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (y > 0)
+                {
+                    if (map[x, y] == 0 && map[x, y - 1] == 1 && (Random.Range(0, 10) == 1) && enemyCount < 3 && GetSurroundingCount(x, y) < 4 )
+                    {
+                        GameObject en = Instantiate(enemy, new Vector2(x, y), Quaternion.identity);
+                        en.transform.parent = transform;
+                        en.transform.localPosition = new Vector2(x, y);
+                        enemyCount++;
+                    }
+                }
+                
+            }
+        }
+    }
+
+    public void AddCollectables()
+    {
+        for (int x = 1; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (map[x, y] == 0 && (Random.Range(0, 10) == 1) && collectablesCount < 1 && GetSurroundingCount(x, y) == 0)
+                {
+                    int r = Random.Range(0, collectables.Length);
+                    GameObject go = Instantiate(collectables[r], new Vector2(x, y), Quaternion.identity);
+                    go.transform.parent = transform;
+                    go.transform.localPosition = new Vector2(x, y);
+                    collectablesCount++;
+                    x += 2;
+                }
+                
+            }
+        }
+    }
+
+    public void AddHeart()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (map[x, y] == 0 && (Random.Range(0, 50) == 1) && GetSurroundingCount(x, y) == 0)
+                {
+                    GameObject go = Instantiate(heart, new Vector2(x, y), Quaternion.identity);
+                    go.transform.parent = transform;
+                    go.transform.localPosition = new Vector2(x, y);
+                    return;
+                }
+                
+            }
+        }
     }
 }

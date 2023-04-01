@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Tilemap
+  - RoomTilemap
+  - Enemy
+  - WeakPoint
+  - EnemyCheck
+  - GameOver
   layers:
   - Default
   - TransparentFX
@@ -14,11 +20,11 @@ TagManager:
   - Player
   - Ground
   - Gen
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Door
+  - Wall
+  - Enemy
+  - BGLights
+  - EnemyCheck
   - 
   - 
   - 

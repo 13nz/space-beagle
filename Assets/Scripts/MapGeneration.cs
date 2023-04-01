@@ -2,26 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
+
+
+// Background generation:
+// https://deep-fold.itch.io/space-background-generator
 
 
 public class MapGeneration : MonoBehaviour 
 {
+    [Header("Backgrounds")]
+    [SerializeField] GameObject background;
+    [SerializeField] Sprite[] backgroundImages;
+
+    [Header("Rooms")]
     [SerializeField] int width;
     [SerializeField] int height;
     [SerializeField] int scaleX;
     [SerializeField] int scaleY;
-    [SerializeField] TileBase borderTile;
+    [SerializeField] TileBase[] tiles;
     [SerializeField] Tilemap tilemap;
     [SerializeField] Grid mainGrid;
+    [SerializeField] GameObject room;
     public static Transform playerSpawnPos;
 
+    [Header("UI")]
+    [SerializeField] TextMeshProUGUI lvl;
+    [SerializeField] TextMeshProUGUI scr;
+    [SerializeField] Image[] hearts;
+    [SerializeField] Sprite heart;
+    [SerializeField] GameObject mainMenu;
+
+  
+    TileBase borderTile;
+    //[SerializeField] GameObject exitDoor;
+
     public GameObject spawn;
+
+    bool exitRoom = false;
 
     public static bool ready;
     bool gotPlayerPos;
 
     //[SerializeField] int scale;
-    [SerializeField] GameObject room;
+    [SerializeField] PauseScreen pauseScreen;
+    
     Stack<Generator.Directions> directions;
 
     int direction; // 0 & 1 == Right, 2 & 3 == Left, 4 == down
@@ -32,6 +59,23 @@ public class MapGeneration : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1;
+
+        if (PlayerData.level > 1)
+        {
+            mainMenu.SetActive(false);
+        }
+        
+        borderTile = tiles[Random.Range(0, tiles.Length)];
+        width = 3 + PlayerData.level;
+        height = 3 + PlayerData.level;
+/* 
+        SpriteRenderer sr = background.GetComponent<SpriteRenderer>();
+        int rand = Random.Range(0, backgroundImages.Length);
+        sr.sprite = backgroundImages[rand];
+ */
+        background.GetComponent<SpriteRenderer>().sprite = backgroundImages[Random.Range(0, backgroundImages.Length)];
+
         ready = false;
         gotPlayerPos = false;
 
@@ -40,19 +84,6 @@ public class MapGeneration : MonoBehaviour
         transform.position = new Vector2(0, 0);
         transform.position = new Vector2(Random.Range(0, width), 0);
 
-        /* if (transform.position.x > scaleX)
-        {
-            if (transform.position.x >= width - scaleX)
-            {
-                CreateRoom(Generator.Directions.L);
-                
-            }
-            CreateRoom(Generator.Directions.LR);
-        }
-        else
-        {
-            CreateRoom(Generator.Directions.R);
-        } */
         
         CreateRoom(Generator.Directions.LR);
 
@@ -72,7 +103,32 @@ public class MapGeneration : MonoBehaviour
 
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            pauseScreen.Setup();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Time.timeScale = 1;
+            SceneManager.LoadScene("Game");
+        }
+
+        lvl.text = "Level: " + PlayerData.level.ToString();
+        scr.text = "Score: " + PlayerData.score.ToString();
+
+        for (int i = 0; i < hearts.Length; i++)
+        {
+            if (i < PlayerData.lives)
+            {
+                hearts[i].enabled = true;
+            }
+            else
+            {
+                hearts[i].enabled = false;
+            }
+        }
+
         if (!finished)
         {
             if (direction == 0 || direction == 1) // Right
@@ -151,8 +207,10 @@ public class MapGeneration : MonoBehaviour
                 }
                 else
                 {
+                    exitRoom = true;
                     Destroy(GetRoom(transform.position));
                     CreateRoom(Generator.Directions.LR);
+                    exitRoom = false;
                     FillMap();
                     //mainGrid.transform.position = transform.position;
                     //mainGrid.transform.SetParent(transform);
@@ -182,8 +240,9 @@ public class MapGeneration : MonoBehaviour
         //Generator.Directions dir;
         GameObject newRoom = Instantiate(room, new Vector3(transform.position.x * scaleX, transform.position.y * scaleY, 0), Quaternion.identity) as GameObject;
         var initRoom = newRoom.GetComponent<Generator>();
-        initRoom.Init(dir);
-        initRoom.transform.parent = transform;
+        initRoom.Init(dir, exitRoom);
+        
+        initRoom.transform.parent = tilemap.transform;
         int x = (int)transform.position.x;
         int y = -(int)transform.position.y;
 
@@ -191,10 +250,15 @@ public class MapGeneration : MonoBehaviour
         loadedRooms.Add(new Vector2(x, y));
         if (!gotPlayerPos)
         {
-            Instantiate(spawn, new Vector3(newRoom.transform.position.x / 2, newRoom.transform.position.y / 2, 0), Quaternion.identity);
-            playerSpawnPos = newRoom.transform;
+            GameObject go = Instantiate(spawn, new Vector3(newRoom.transform.localPosition.x + scaleX / 2, newRoom.transform.position.y + scaleY / 2, 0), Quaternion.identity);
+            playerSpawnPos = go.transform;
+            int spawnX = (int)newRoom.transform.localPosition.x + scaleX / 2;
+            int spawnY = (int)newRoom.transform.localPosition.y + scaleY / 2;
+            playerSpawnPos.transform.position = new Vector2(spawnX, spawnY);
             gotPlayerPos = true;
         }
+
+        
         //directions.Push(dir);
     }
 
@@ -215,48 +279,18 @@ public class MapGeneration : MonoBehaviour
 
     void RenderBorder(Vector2 local)
     {
-        int borderWidth = width * scaleX - (width - 2);
-        int borderHeight = height * scaleY - (height - 2);
-/* 
-        int max;
-        int min;
-
-        if (scaleX > scaleY)
-        {
-            max = scaleX;
-            mainGrid = scaleY;
-        }
-        else
-        {
-            max = scaleY;
-            min = scaleX;
-        }
-
-        var Center = ((max - min) / 2) + min;
-        var Extent = (max - min) / 2;
- */
+        int borderWidth = width * scaleX + 1 ;
+        int borderHeight = height * scaleY + 1;
 
  int d = (int)Mathf.Sqrt(scaleX * scaleX + scaleY * scaleY);
 
-        int gridX = Mathf.RoundToInt(local.x - scaleX / 2 - 3); //  - scaleX / 2
-        int gridY = Mathf.RoundToInt(local.y + scaleY / 2 - 2); //  + scaleY / 2
+        int gridX = Mathf.RoundToInt(local.x - 1); //  - scaleX / 2
+        int gridY = Mathf.RoundToInt(local.y + scaleY - 1); //  + scaleY / 2
 
         int endX = gridX + borderWidth ;
         int endY = gridY - borderHeight ;
 
-        // FIX SCALING
-
         tilemap.ClearAllTiles();
-        /* for (int x = 0; x < borderWidth; x++)
-        {
-            for (int y = 0; y < borderHeight; y++)
-            {
-                if (x == 0 || x == borderWidth - 1 || y == borderHeight - 1 || y == 0)
-                {
-                    tilemap.SetTile(new Vector3Int(x, y, 0), borderTile);
-                }
-            }
-        } */
 
         for (int x = gridX; x < endX; x++)
         {
@@ -268,6 +302,11 @@ public class MapGeneration : MonoBehaviour
                 }
             }
         }
+    }
+
+    public TileBase GetTile()
+    {
+        return borderTile;
     }
 
 }
