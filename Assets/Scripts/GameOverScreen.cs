@@ -22,7 +22,7 @@ public class GameOverScreen : MonoBehaviour
         PlayerData.lives = PlayerData.maxLives;
         PlayerData.score = 0;
         PlayerData.level = 1;
-        //PlayerMove.IsPaused = false;
+        PlayerMove.IsPaused = false;
         //Time.timeScale = 1;
         Time.timeScale = 1;
         SceneManager.LoadScene("Game");

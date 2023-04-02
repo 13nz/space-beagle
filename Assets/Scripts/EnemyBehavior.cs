@@ -8,12 +8,14 @@ public class EnemyBehavior : MonoBehaviour
     Rigidbody2D rb;
     CapsuleCollider2D cap;
     BoxCollider2D box;
+    ParticleSystem ps;
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         cap = GetComponent<CapsuleCollider2D>();
         box = GetComponent<BoxCollider2D>();
+        ps = GetComponent<ParticleSystem>();
 
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         //sr.color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
@@ -32,20 +34,6 @@ public class EnemyBehavior : MonoBehaviour
             rb.velocity = new Vector2(-moveSpeed, 0f);
         }
     }
-
-    /* private void OnTriggerExit2D(Collider2D col) 
-    {
-        transform.localScale = new Vector2(-(Mathf.Sign(rb.velocity.x)), transform.localScale.y);
-        
-    } */
-
-    /* private void OnTriggerEnter2D(Collider2D other) 
-    {
-        if (cap.IsTouchingLayers(LayerMask.GetMask("Ground")))
-        {
-            transform.localScale = new Vector2(-(Mathf.Sign(rb.velocity.x)), transform.localScale.y);
-        }
-    } */
 
 
     private bool IsFacingRight()

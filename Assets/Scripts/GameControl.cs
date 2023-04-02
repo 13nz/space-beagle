@@ -8,6 +8,7 @@ public class GameControl : MonoBehaviour
     // Start is called before the first frame update
     public void GameOver()
     {
+        PlayerMove.IsPaused = true;
         Time.timeScale = 0;
         gameOverScreen.Setup();
     }

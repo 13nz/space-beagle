@@ -13,7 +13,7 @@ public class EnemyWallDetector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
-        if (other.CompareTag("Tilemap") || other.CompareTag("RoomTilemap") || other.CompareTag("Enemy"))
+        if (other.CompareTag("Tilemap") || other.CompareTag("RoomTilemap") || other.CompareTag("Enemy") || other.CompareTag("ExitDoor"))
         {
             parentScript.ChildCollision();
         }

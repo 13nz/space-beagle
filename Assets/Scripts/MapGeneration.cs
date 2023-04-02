@@ -282,7 +282,7 @@ public class MapGeneration : MonoBehaviour
         int borderWidth = width * scaleX + 1 ;
         int borderHeight = height * scaleY + 1;
 
- int d = (int)Mathf.Sqrt(scaleX * scaleX + scaleY * scaleY);
+        int d = (int)Mathf.Sqrt(scaleX * scaleX + scaleY * scaleY);
 
         int gridX = Mathf.RoundToInt(local.x - 1); //  - scaleX / 2
         int gridY = Mathf.RoundToInt(local.y + scaleY - 1); //  + scaleY / 2
