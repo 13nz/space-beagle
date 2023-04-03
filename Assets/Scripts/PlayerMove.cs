@@ -11,7 +11,7 @@ public class PlayerMove : MonoBehaviour
     private bool canDash = true;
     public static bool isDashing;
     private float dashingPower = 24f;
-    private float dashingTime = 0.2f;
+    public static float dashingTime = 0.2f;
     private float dashingCooldown = 1f;
 
     [SerializeField] TrailRenderer trail;

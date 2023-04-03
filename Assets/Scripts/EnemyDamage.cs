@@ -35,7 +35,7 @@ public class EnemyDamage : MonoBehaviour
 
     IEnumerator Kill()
     {
-        yield return new WaitForSeconds (gameObject.GetComponent<AudioSource>().clip.length);
+        yield return new WaitUntil(() => !PlayerMove.isDashing);
         Destroy(transform.gameObject);
     }
 }

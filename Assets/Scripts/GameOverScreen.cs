@@ -12,6 +12,7 @@ public class GameOverScreen : MonoBehaviour
 
     public void Setup()
     {
+        MapGeneration.src.Pause();
         Time.timeScale = 0;
         gameObject.SetActive(true);
         score.text = "Score: " + PlayerData.score.ToString();

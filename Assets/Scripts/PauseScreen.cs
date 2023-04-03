@@ -7,6 +7,7 @@ public class PauseScreen : MonoBehaviour
 {
     public void Setup()
     {
+        MapGeneration.src.Pause();
         gameObject.SetActive(true);
         //PlayerMove.IsPaused = true;
         Time.timeScale = 0;
@@ -24,6 +25,7 @@ public class PauseScreen : MonoBehaviour
     {
         Time.timeScale = 1;
         PlayerMove.IsPaused = false;
+        MapGeneration.src.Play();
         gameObject.SetActive(false);
     }
 

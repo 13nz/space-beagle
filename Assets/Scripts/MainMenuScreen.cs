@@ -6,6 +6,7 @@ public class MainMenuScreen : MonoBehaviour
 {
     public void Start()
     {
+        MapGeneration.src.Pause();
         Time.timeScale = 0;
         //PlayerMove.IsPaused = true;
     }
@@ -24,6 +25,7 @@ public class MainMenuScreen : MonoBehaviour
         Time.timeScale = 1;
         //PlayerMove.IsPaused = false;
         gameObject.SetActive(false);
+        MapGeneration.src.Play();
     }
 
     public void Quit()

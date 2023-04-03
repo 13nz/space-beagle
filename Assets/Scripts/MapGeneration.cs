@@ -48,6 +48,9 @@ public class MapGeneration : MonoBehaviour
 
     //[SerializeField] int scale;
     [SerializeField] PauseScreen pauseScreen;
+
+    [SerializeField] AudioSource[] songs;
+    [SerializeField] public static AudioSource src;
     
     Stack<Generator.Directions> directions;
 
@@ -60,6 +63,10 @@ public class MapGeneration : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1;
+        src = songs[Random.Range(0, songs.Length)];
+        src.volume = 0.2f;
+        src.Play();
+
 
         if (PlayerData.level > 1)
         {
