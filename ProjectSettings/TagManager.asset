@@ -11,6 +11,8 @@ TagManager:
   - EnemyCheck
   - GameOver
   - ExitDoor
+  - Win
+  - Hurt
   layers:
   - Default
   - TransparentFX

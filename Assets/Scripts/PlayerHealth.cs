@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [SerializeField] ParticleSystem hurt;
     // Start is called before the first frame update
     void Start()
     {
@@ -12,10 +13,16 @@ public class PlayerHealth : MonoBehaviour
         {
             PlayerData.lives = PlayerData.maxLives;
         }
+
+        
     }
 
     public void TakeDamage(int damage)
     {
+        if (!hurt.isPlaying)
+            hurt.Play();
+        ParticleSystem.EmissionModule em = hurt.emission;
+        em.enabled = true;
         //Debug.Log("Invincible: " + PlayerData.invincible.ToString());
         if (!PlayerData.invincible)
         {

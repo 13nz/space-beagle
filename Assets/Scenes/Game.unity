@@ -930,7 +930,6 @@ MonoBehaviour:
   - {fileID: 696700519}
   - {fileID: 2095202436}
   - {fileID: 807259127}
-  src: {fileID: 0}
   loadedRooms: []
 --- !u!4 &319204804
 Transform:

@@ -10,6 +10,7 @@ public class EnemyStomp : MonoBehaviour
     [SerializeField] GameObject heart;
     [SerializeField] GameObject diamond;
     AudioSource src;
+    ParticleSystem ps;
 
     private void Start() 
     {
@@ -41,6 +42,7 @@ public class EnemyStomp : MonoBehaviour
 
     IEnumerator Kill()
     {
+        
         yield return new WaitForSeconds (src.clip.length);
         Destroy(transform.parent.gameObject);
     }
