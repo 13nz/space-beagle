@@ -19,3 +19,5 @@ There is a pause screen which is activated by pressing ESC, a game over screen, 
 The UI displayes the remaining hearts, the score and the current level.
 
 The player retains the points collected and the amount of hearts when the level changes. The game is over once the player has lost all the hearts and then must start again with 0 score. The player can reset the current level by pressing R.
+
+Featuring original music :)
