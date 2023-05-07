@@ -1,6 +1,8 @@
 # CS50 Game Development - Final Project
 Lena, 2023
 
+<img width="1440" alt="Screenshot 2023-04-01 at 1 22 58 PM" src="https://user-images.githubusercontent.com/99259480/236686992-2696bf9b-b4ab-472d-9df1-c03f785ad6e4.png">
+
 
 A game made with Unity in which the player controls a beagle in space trying to collect treasure and avoid enemies.
 
