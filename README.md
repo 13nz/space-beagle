@@ -1,5 +1,6 @@
-# CS50 Game Development - Final Project
+# Koni
 Lena, 2023
+https://lenzz.itch.io/koni
 
 <img width="1440" alt="Screenshot 2023-04-01 at 1 22 58 PM" src="https://user-images.githubusercontent.com/99259480/236686992-2696bf9b-b4ab-472d-9df1-c03f785ad6e4.png">
 
