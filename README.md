@@ -1,24 +1,95 @@
-# Koni
-Lena, 2023
-https://lenzz.itch.io/koni
+# 🌌 Space Beagle
 
-<img width="1440" alt="Screenshot 2023-04-01 at 1 22 58 PM" src="https://user-images.githubusercontent.com/99259480/236686992-2696bf9b-b4ab-472d-9df1-c03f785ad6e4.png">
+**Space Beagle** is a Unity platformer where you control a beagle in space, exploring procedurally generated levels to collect treasure and avoid enemies.
+<img width="1440" alt="236686992-2696bf9b-b4ab-472d-9df1-c03f785ad6e4" src="https://github.com/user-attachments/assets/4c015593-c82d-4c27-9483-f730c9835322" />
 
+---
 
-A game made with Unity in which the player controls a beagle in space trying to collect treasure and avoid enemies.
+## 🎮 Gameplay
 
-The game is a platformer made of rooms which together form a level. The rooms are procedurally generated using cellular automata and can be adjusted by smoothness and fill percent. Each room has a direction, meaning certain sides of it have openings and others are walls. The level is created when the rooms are generated one by one using a pathfinding algorithm which ensures there is always a path from the player spawn point at the top of the level, to the exit door at the bottom. The player can not traverse upwards but can gain more speed and distance by double-jumping or dashing.
+- Navigate through platformer levels made of interconnected rooms.
+- Each level is procedurally generated using cellular automata and a pathfinding algorithm.
+- Guaranteed path from the **spawn point** (top) to the **exit door** (bottom).
+- Player abilities:
+  - **Run**
+  - **Double-jump**
+  - **Dash**
+- The player cannot manually move upward, but can reach higher platforms via double-jump and dash.
 
-When the player passes through the exit door, the level number increases and the level is randomly generated again from the start, each time with one extra room in width and one in height. The background as well as the tilemap are randomly chosen each time from an array of assets. There is also a decorative tilemap in which collision-free decorations are placed on top of ground tiles at random. The background music is also selected at random, except for the menus, which have a set track.
+---
 
-The player must either dodge or kill enemies walking around the level. The enemies are randomly placed on surfaces depending on the surrounding tiles. The color of each enemy is randomly set when they spawn. The enemies can hurt the player, and the player can kill them by stomping on them or dashing onto them. Upon death, enemies can randomly spawn hearts or collectables. Each enemy defeat awards the player one point. 
+## Playable demo: https://lenzz.itch.io/koni
 
-The collectables are randomly placed on positions guaranteed to be reachable by the player and the chances of each kind of item spawning depends on its rarity and the points it awards. If the player is at full health, hearts cannot be collected.
+## 🧩 Level Generation
 
-There is a pause screen which is activated by pressing ESC, a game over screen, and a main mainu screen, all containing buttons which allow the player to play or quit.
+- Rooms are generated with adjustable **smoothness** and **fill percentage**.
+- Each room has directional openings (top, bottom, left, right) to form valid paths.
+- Levels grow in **width** and **height** with each new stage.
+- Randomized elements:
+  - **Backgrounds**
+  - **Tilemaps**
+  - **Decorative tiles** (non-colliding visuals)
 
-The UI displayes the remaining hearts, the score and the current level.
+---
 
-The player retains the points collected and the amount of hearts when the level changes. The game is over once the player has lost all the hearts and then must start again with 0 score. The player can reset the current level by pressing R.
+## 🎵 Audio
 
-Featuring original music :)
+- Random music is selected from a set of tracks for each level.
+- Menus use a dedicated background track.
+- 🎧 **Original soundtrack included!**
+
+---
+
+## 👾 Enemies
+
+- Spawn randomly on valid surfaces based on surrounding tiles.
+- Each enemy has a randomly assigned color.
+- Player can defeat enemies by:
+  - **Stomping** on them
+  - **Dashing** into them
+- Enemies can drop:
+  - **Hearts** ❤️
+  - **Collectables** 💎
+- Defeating an enemy grants **+1 point**.
+
+---
+
+## 💎 Collectables
+
+- Placed in reachable locations only.
+- Spawning chance depends on:
+  - **Rarity**
+  - **Point value**
+- Hearts cannot be collected if the player is at full health.
+
+---
+
+## 🧠 UI & Controls
+
+- **HUD displays:**
+  - 💖 Hearts
+  - ⭐ Score
+  - 📈 Current Level
+
+- **Controls:**
+  - `ESC` → Pause menu
+  - `R` → Restart current level
+
+- **Menus:**
+  - Main Menu
+  - Pause Screen
+  - Game Over Screen
+
+All menus contain **Play** and **Quit** buttons.
+
+---
+
+## 📈 Progression & Game Over
+
+- Player health and score carry over between levels.
+- Game Over occurs when all hearts are lost.
+- Starting a new game resets score to **0**.
+
+---
+
+Enjoy exploring the cosmos with your trusty beagle companion!
